@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Record Payment — {{ group.name }}{% endblock %}
+{% block content %}
+<div class="container-sm">
+  <div style="margin-bottom:var(--space-md)">
+    <a href="/groups/{{ group.id }}/balances" class="btn btn-ghost btn-sm">← Balances</a>
+  </div>
+  <div class="card">
+    <h1 style="margin-bottom:var(--space-md)">Record Payment</h1>
+    <form method="post" action="/groups/{{ group.id }}/payments">
+      <div class="form-group">
+        <label class="form-label" for="from_user_id">From (who paid)</label>
+        <select id="from_user_id" class="form-select" name="from_user_id">
+          {% for member in members %}
+          <option value="{{ member.id }}" {% if member.id == current_user.id %}selected{% endif %}>{{ member.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="to_user_id">To (who receives)</label>
+        <select id="to_user_id" class="form-select" name="to_user_id">
+          {% for member in members %}
+          <option value="{{ member.id }}">{{ member.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:var(--space-sm)">
+        <div class="form-group">
+          <label class="form-label" for="amount">Amount</label>
+          <input id="amount" class="form-input" type="text" name="amount" required placeholder="500.00" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="currency_code">Currency</label>
+          <select id="currency_code" class="form-select" name="currency_code">
+            <option value="INR">INR</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="date">Date</label>
+        <input id="date" class="form-input" type="date" name="date" required value="{{ today }}" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="notes">Notes (optional)</label>
+        <input id="notes" class="form-input" type="text" name="notes" placeholder="e.g. UPI transfer" />
+      </div>
+      <div style="display:flex;gap:var(--space-sm);justify-content:flex-end">
+        <a href="/groups/{{ group.id }}/balances" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary">Record Payment</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
