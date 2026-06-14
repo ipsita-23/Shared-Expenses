@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="section-header">
+    <h1>Your Groups</h1>
+    <a href="/groups/new" class="btn btn-primary">+ New Group</a>
+  </div>
+
+  {% if groups %}
+  <div class="grid-2">
+    {% for group in groups %}
+    {% set bal = group_balances.get(group.id, 0) %}
+    <a href="/groups/{{ group.id }}" style="text-decoration:none">
+      <div class="card" style="cursor:pointer">
+        <div class="card-header">
+          <h3>{{ group.name }}</h3>
+          {% if bal > 0 %}
+          <span class="badge badge-positive">+₹{{ "%.2f"|format(bal) }}</span>
+          {% elif bal < 0 %}
+          <span class="badge badge-negative">−₹{{ "%.2f"|format(bal|abs) }}</span>
+          {% else %}
+          <span class="badge badge-neutral">Settled</span>
+          {% endif %}
+        </div>
+        <p style="font-size:0.85rem">
+          {% if bal > 0 %}You are owed ₹{{ "%.2f"|format(bal) }}
+          {% elif bal < 0 %}You owe ₹{{ "%.2f"|format(bal|abs) }}
+          {% else %}All settled up
+          {% endif %}
+        </p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h3>No groups yet</h3>
+    <p>Create a group to start tracking shared expenses.</p>
+    <br/>
+    <a href="/groups/new" class="btn btn-primary">Create your first group</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
